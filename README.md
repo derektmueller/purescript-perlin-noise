@@ -1,7 +1,7 @@
 
 # purescript-p5-boilerplate
 
-Boilerplate for setting up a project with purescript-p5. Includes webpack with hot-reloading.
+Boilerplate for setting up a project with [purescript-p5](https://github.com/parenparen/purescript-p5). Includes webpack with hot-reloading.
 
 ## Installing
 
