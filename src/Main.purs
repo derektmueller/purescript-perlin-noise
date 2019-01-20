@@ -10,7 +10,9 @@ import Web.HTML (window)
 import Web.HTML.Window (innerWidth, innerHeight)
 
 import P5 
-import P5.Types (P5)
+import P5.Rendering
+import P5.Color
+import P5.Shape
 
 type AppState = {
   p5 :: P5
@@ -34,7 +36,7 @@ main mAppState = do
         , e: "#9d7f38"
         }
   setup p do
-    _ <- createCanvas p w h
+    _ <- createCanvas p w h Nothing
     pure unit
 
   draw p do
