@@ -13,6 +13,7 @@ import P5
 import P5.Rendering
 import P5.Color
 import P5.Shape
+import P5.Structure
 
 type AppState = {
   p5 :: P5
@@ -46,5 +47,11 @@ main mAppState = do
     rect p 100.0 100.0 50.0 50.0 Nothing Nothing
     rect p 110.0 110.0 50.0 50.0 Nothing Nothing
     pure unit
+
+  case mAppState of
+    (Just _) -> do
+      clear p
+      redraw p Nothing
+    _ -> pure unit
 
   pure $ Just { p5: p }
