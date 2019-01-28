@@ -1,18 +1,25 @@
 
-# purescript-p5-boilerplate
+Implementation of Perlin Noise in PureScript.
 
-Boilerplate for setting up a project with [purescript-p5](https://github.com/parenparen/purescript-p5). Includes webpack with hot-reloading.
+![Alt Text](https://github.com/parenparen/purescript-perlin-noise/blob/master/example0.png?raw=true)
 
-## Installing
+## Install & Run
 
 ```
 bower install
 npm install
-```
-
-## Running the starter code
-
-```
-npm run webpack:dll
 npm run webpack:server
 ```
+
+Visit localhost:4008/src/index.html
+
+## TODO
+
+* add octaves and persistence
+* add 2d and 3d versions
+
+## References
+
+* https://eev.ee/blog/2016/05/29/perlin-noise/
+* https://mrl.nyu.edu/~perlin/doc/oscar.html#noise
+* http://flafla2.github.io/2014/08/09/perlinnoise.html
