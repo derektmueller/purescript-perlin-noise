@@ -109,7 +109,7 @@ main mAppState = do
         + 100.0 
         * (0.5 - 
             (octavePerlin1D 
-              (9.0 * (toNumber x / Math.floor w)) 1 2.0)))
+              (9.0 * (toNumber x / Math.floor w)) 2 0.6)))
         4.0 Nothing
       ellipse p 
         (toNumber x) 
@@ -117,7 +117,7 @@ main mAppState = do
         + 100.0 
         * (0.5 - 
             (octavePerlin1D 
-              (9.0 * (toNumber x / Math.floor w)) 2 2.0)))
+              (9.0 * (toNumber x / Math.floor w)) 3 0.6)))
         4.0 Nothing
     ) $ enumFromThenTo 1 2 (floor w)
     pure unit
