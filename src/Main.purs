@@ -1,6 +1,7 @@
 module Main where
 
 import Prelude 
+import Debug.Trace (trace)
 import Partial.Unsafe (unsafePartial)
 import Effect (Effect)
 import Effect.Console (log, logShow)
@@ -21,6 +22,7 @@ import P5.Rendering
 import P5.Color
 import P5.Shape
 import P5.Structure
+import P5.Math
 
 type AppState = {
   p5 :: P5
@@ -28,7 +30,33 @@ type AppState = {
 
 permutation :: Array Int
 permutation = 
-  [ 139, 30, 126, 141, 43, 53, 57, 8, 158, 84, 157, 251, 239, 95, 247, 223, 247, 90, 202, 0, 150, 42, 60, 208, 226, 48, 232, 38, 148, 114, 140, 178, 64, 101, 26, 10, 88, 36, 107, 139, 60, 252, 127, 226, 109, 179, 144, 120, 192, 2, 160, 87, 70, 11, 112, 194, 95, 102, 219, 164, 52, 173, 148, 112, 147, 249, 136, 207, 204, 248, 144, 14, 149, 189, 61, 36, 29, 122, 29, 108, 238, 134, 237, 239, 236, 36, 139, 20, 172, 240, 37, 100, 135, 72, 232, 122, 18, 202, 116, 77, 59, 7, 41, 81, 215, 128, 232, 65, 172, 92, 249, 224, 238, 55, 9, 216, 115, 57, 157, 52, 112, 161, 137, 110, 195, 100, 255, 22, 52, 173, 1, 156, 162, 67, 189, 49, 210, 68, 55, 254, 253, 105, 103, 35, 204, 57, 10, 160, 100, 227, 178, 145, 177, 49, 236, 117, 228, 144, 31, 204, 33, 92, 227, 128, 107, 236, 40, 208, 60, 247, 17, 174, 29, 24, 207, 224, 33, 24, 212, 213, 195, 97, 53, 177, 221, 86, 4, 226, 160, 113, 132, 104, 18, 31, 189, 82, 78, 240, 252, 19, 41, 94, 87, 46, 247, 174, 195, 30, 159, 184, 200, 92, 41, 240, 154, 95, 99, 100, 101, 201, 27, 228, 215, 225, 122, 214, 190, 165, 72, 182, 118, 216, 240, 110, 28, 129, 97, 85, 27, 35, 94, 191, 54, 94, 193, 178, 146, 238, 124, 64, 17, 68, 235, 179, 88, 91 ]
+  [ 
+  151,160,137,91,90,15,
+   131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+   190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+   88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+   77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+   102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+   135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+   5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+   223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+   129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
+   ,151,160,137,91,90,15,
+   131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+   190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+   88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
+   77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+   102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
+   135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
+   5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+   223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
+   129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
+   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
+   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
+   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180]
 
 enumFromThenTo :: Int -> Int -> Int -> Array Int
 enumFromThenTo a b c = do
@@ -56,6 +84,20 @@ octavePerlin1D x octave persistence = evalState octavePerlin1D' 0.0
       maxValue <- get
       pure $ total / maxValue
 
+octavePerlin2D :: Number -> Number -> Int -> Number -> Number
+octavePerlin2D x y octave persistence = evalState octavePerlin2D' 0.0
+  where 
+    octavePerlin2D' :: State Number Number
+    octavePerlin2D' = do 
+      total <- sum <$> UnsafeTraversable.traverse (\i -> do
+        let period = 2.0 `Math.pow` (toNumber i)
+            amplitude = persistence `Math.pow` (toNumber i)
+        maxValue <- get
+        put (maxValue + amplitude)
+        pure $ perlin2D (x * period) (y * period) * amplitude
+      ) (0..octave)
+      maxValue <- get
+      pure $ total / maxValue
 
 perlin1D :: Number -> Number
 perlin1D x = do
@@ -79,6 +121,8 @@ perlin1D x = do
 perlin2D :: Number -> Number -> Number
 perlin2D x y = do
   let 
+    inc :: Int -> Int
+    inc x = (x + 1)
     xi = floor x `mod` 256
     yi = floor y `mod` 256
     xf = x - (Math.floor x)
@@ -86,33 +130,34 @@ perlin2D x y = do
     aa = toNumber
       $ unsafePartial
       $ permutation `unsafeIndex`
-          ((permutation `unsafeIndex` xi) + yi)
+      ((permutation `unsafeIndex` xi) + yi)
     ab = toNumber
       $ unsafePartial
       $ permutation `unsafeIndex`
-          ((permutation `unsafeIndex` xi) + (yi + 1))
+      ((permutation `unsafeIndex` (inc xi)) + yi)
     ba = toNumber
       $ unsafePartial
       $ permutation `unsafeIndex`
-          ((permutation `unsafeIndex` (xi + 1)) + yi)
+      ((permutation `unsafeIndex` xi) + (inc yi))
     bb = toNumber
       $ unsafePartial
       $ permutation `unsafeIndex`
-          ((permutation `unsafeIndex` (xi + 1)) + (yi + 1))
+      ((permutation `unsafeIndex` (inc xi)) + (inc yi))
     sx = sCurve xf
     sy = sCurve yf
     x1 = lerp
+      sx
       (grad aa xf yf)
-      (grad ab (1.0 - xf) yf)
-      sx
+      (grad ab (xf - 1.0) yf)
     x2 = lerp
-      (grad ba xf (1.0 - yf))
-      (grad bb (1.0 - xf) (1.0 - yf))
       sx
-  lerp x1 x2 sy
+      (grad ba xf (yf - 1.0))
+      (grad bb (xf - 1.0) (yf - 1.0))
+  ((lerp sy x1 x2) + 1.0) / 2.0
   where
     sCurve :: Number -> Number
-    sCurve t = t * t * (3.0 - 2.0 * t)
+    sCurve t = t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
+    --sCurve t = t * t * (3.0 - 2.0 * t)
     lerp :: Number -> Number -> Number -> Number
     lerp t a b = a + t * (b - a)
     grad :: Number -> Number -> Number -> Number
@@ -121,6 +166,35 @@ perlin2D x y = do
       | hash < 128.0 = y
       | hash < 192.0 = -x
       | otherwise = -y
+
+drawPerlin3d :: P5 -> Number -> Number -> Effect Unit
+drawPerlin3d p w h = do
+  background3 p "black" Nothing
+  noStroke p
+
+  let 
+    r = 5
+    grid = do 
+      x <- enumFromThenTo 1 6 (floor w + r) 
+      y <- enumFromThenTo 1 6 (floor h + r)
+      pure $ Tuple x y
+  traverse_ (\(Tuple x y) -> do
+    let e = octavePerlin2D
+              (25.0 * (toNumber x / Math.floor w)) 
+              (25.0 * (toNumber y / Math.floor h))
+              0
+              0.5
+--    f <- noise p
+--              (28.0 * (toNumber x / Math.floor w)) 
+--              (Just (28.0 * (toNumber y / Math.floor h)))
+--              Nothing
+    fill4 p (255.0) (Just (255.0 * e))
+    rect p (toNumber x) 
+      (toNumber y) (toNumber r) (toNumber r) Nothing Nothing
+    pure unit
+  ) grid
+
+  pure unit
 
 drawPerlin2d :: P5 -> Number -> Number -> Effect Unit
 drawPerlin2d p w h = do
@@ -153,30 +227,6 @@ drawPerlin2d p w h = do
             (9.0 * (toNumber x / Math.floor w)) 3 0.6)))
       4.0 Nothing
   ) $ enumFromThenTo 1 2 (floor w)
-  pure unit
-
-drawPerlin3d :: P5 -> Number -> Number -> Effect Unit
-drawPerlin3d p w h = do
-  background3 p "gray" Nothing
-  stroke p "#4d0c40"
-  strokeWeight p 1.0
-
-  let 
-    r = 18
-    grid = do 
-      x <- enumFromThenTo 1 10 (floor w + r) 
-      y <- enumFromThenTo 1 10 (floor h + r)
-      pure $ Tuple x y
-  traverse_ (\(Tuple x y) -> do
-    fill4 p 200.0 
-      (Just (255.0 * 
-        perlin2D 
-          (90.0 * (toNumber x / Math.floor w)) 
-          (90.0 * (toNumber y / Math.floor h))))
-    ellipse p (toNumber x) (toNumber y) (toNumber r) Nothing
-    pure unit
-  ) grid
-
   pure unit
 
 main :: Maybe AppState -> Effect (Maybe AppState)
