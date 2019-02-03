@@ -157,7 +157,6 @@ perlin2D x y = do
   where
     sCurve :: Number -> Number
     sCurve t = t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
-    --sCurve t = t * t * (3.0 - 2.0 * t)
     lerp :: Number -> Number -> Number -> Number
     lerp t a b = a + t * (b - a)
     grad :: Number -> Number -> Number -> Number
@@ -167,27 +166,21 @@ perlin2D x y = do
       | hash < 192.0 = -x
       | otherwise = -y
 
-drawPerlin3d :: P5 -> Number -> Number -> Effect Unit
-drawPerlin3d p w h = do
-  background3 p "black" Nothing
-  noStroke p
-
+drawPerlin3d :: 
+  P5 -> Int -> Int -> Int -> Number -> Number -> Number -> Effect Unit
+drawPerlin3d p x y octaves persistence w h = do
   let 
-    r = 5
+    r = 2
     grid = do 
-      x <- enumFromThenTo 1 6 (floor w + r) 
-      y <- enumFromThenTo 1 6 (floor h + r)
-      pure $ Tuple x y
+      x' <- enumFromThenTo x (x + r) (x + floor w - r) 
+      y' <- enumFromThenTo y (y + r) (y + floor h - r)
+      pure $ Tuple x' y'
   traverse_ (\(Tuple x y) -> do
     let e = octavePerlin2D
-              (25.0 * (toNumber x / Math.floor w)) 
-              (25.0 * (toNumber y / Math.floor h))
-              0
-              0.5
---    f <- noise p
---              (28.0 * (toNumber x / Math.floor w)) 
---              (Just (28.0 * (toNumber y / Math.floor h)))
---              Nothing
+              (9.0 * (toNumber x / Math.floor w)) 
+              (9.0 * (toNumber y / Math.floor h))
+              octaves
+              persistence
     fill4 p (255.0) (Just (255.0 * e))
     rect p (toNumber x) 
       (toNumber y) (toNumber r) (toNumber r) Nothing Nothing
@@ -249,7 +242,27 @@ main mAppState = do
     pure unit
 
   draw p do
-     drawPerlin3d p w h
+    background3 p "black" Nothing
+    noStroke p
+    drawPerlin3d p 1 1 0 0.5 (w / 2.0) (h / 2.0)
+    drawPerlin3d 
+      p 
+      (floor (w / 2.0)) 
+      1
+      1 0.5
+      (w / 2.0) (h / 2.0)
+    drawPerlin3d 
+      p 
+      (floor (w / 2.0)) 
+      (floor (h / 2.0)) 
+      2 0.5
+      (w / 2.0) (h / 2.0)
+    drawPerlin3d 
+      p 
+      1
+      (floor (h / 2.0)) 
+      5 0.5
+      (w / 2.0) (h / 2.0)
 
   case mAppState of
     (Just _) -> do

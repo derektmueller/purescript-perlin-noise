@@ -5,9 +5,9 @@ Implementation of improved perlin noise in PureScript.
 
 * 1D perlin noise with 0, 2, and 3 octaves (from top)
 
-![Alt Text](https://github.com/parenparen/purescript-perlin-noise/blob/master/example2.png?raw=true)
+![Alt Text](https://github.com/parenparen/purescript-perlin-noise/blob/master/example2-1.png?raw=true)
 
-* 2D perlin noise with 0 octaves
+* 2D perlin noise with 0, 1, 2, and 5 octaves (clockwise from top-left)
 
 ## Install & Run
 
