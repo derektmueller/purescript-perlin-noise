@@ -23,6 +23,7 @@ import P5.Color
 import P5.Shape
 import P5.Structure
 import P5.Math
+import P5.Transform
 
 type AppState = {
   p5 :: P5
@@ -166,14 +167,19 @@ perlin2D x y = do
       | hash < 192.0 = -x
       | otherwise = -y
 
-drawPerlin3d :: 
+drawPerlin3d ::
+  P5 -> Effect Unit
+drawPerlin3d p = do
+  pure unit
+
+drawPerlin2d :: 
   P5 -> Int -> Int -> Int -> Number -> Number -> Number -> Effect Unit
-drawPerlin3d p x y octaves persistence w h = do
+drawPerlin2d p x y octaves persistence w h = do
   let 
-    r = 2
+    r = 20
     grid = do 
-      x' <- enumFromThenTo x (x + r) (x + floor w - r) 
-      y' <- enumFromThenTo y (y + r) (y + floor h - r)
+      x' <- enumFromThenTo x (x + r) (x + floor w) 
+      y' <- enumFromThenTo y (y + r) (y + floor h)
       pure $ Tuple x' y'
   traverse_ (\(Tuple x y) -> do
     let e = octavePerlin2D
@@ -189,8 +195,8 @@ drawPerlin3d p x y octaves persistence w h = do
 
   pure unit
 
-drawPerlin2d :: P5 -> Number -> Number -> Effect Unit
-drawPerlin2d p w h = do
+drawPerlin1d :: P5 -> Number -> Number -> Effect Unit
+drawPerlin1d p w h = do
   background3 p "gray" Nothing
   stroke p "#4d0c40"
   strokeWeight p 1.0
@@ -222,6 +228,33 @@ drawPerlin2d p w h = do
   ) $ enumFromThenTo 1 2 (floor w)
   pure unit
 
+drawPerlin2dExamples :: 
+  P5 -> Number -> Number -> Effect Unit
+drawPerlin2dExamples p w h = do
+  background3 p "black" Nothing
+  noStroke p
+  drawPerlin2d p 1 1 0 0.5 (w / 2.0) (h / 2.0)
+  drawPerlin2d 
+    p 
+    (floor (w / 2.0)) 
+    1
+    1 0.5
+    (w / 2.0) (h / 2.0)
+  drawPerlin2d 
+    p 
+    (floor (w / 2.0)) 
+    (floor (h / 2.0)) 
+    2 0.5
+    (w / 2.0) (h / 2.0)
+  drawPerlin2d 
+    p 
+    1
+    (floor (h / 2.0)) 
+    5 0.5
+    (w / 2.0) (h / 2.0)
+
+data ThreeTuple a b c = ThreeTuple a b c
+
 main :: Maybe AppState -> Effect (Maybe AppState)
 main mAppState = do
   win <- window
@@ -229,40 +262,35 @@ main mAppState = do
   h <- toNumber <$> innerHeight win
   p <- maybe getP5 (\x -> pure x.p5) mAppState
 
-  let palette = 
-        { a: "#4d0c40"
-        , b: "gray"
-        , c: "#b29179"
-        , d: "#c0a476"
-        , e: "#9d7f38"
-        }
   setup p do
-    _ <- createCanvas p w h Nothing
+    _ <- createCanvas p w h (Just CREATE_CANVAS_RENDERER_WEBGL)
     noLoop p
     pure unit
 
   draw p do
     background3 p "black" Nothing
-    noStroke p
-    drawPerlin3d p 1 1 0 0.5 (w / 2.0) (h / 2.0)
-    drawPerlin3d 
-      p 
-      (floor (w / 2.0)) 
-      1
-      1 0.5
-      (w / 2.0) (h / 2.0)
-    drawPerlin3d 
-      p 
-      (floor (w / 2.0)) 
-      (floor (h / 2.0)) 
-      2 0.5
-      (w / 2.0) (h / 2.0)
-    drawPerlin3d 
-      p 
-      1
-      (floor (h / 2.0)) 
-      5 0.5
-      (w / 2.0) (h / 2.0)
+    let 
+      r = 50
+      x = 0
+      y = 0
+      grid = do 
+        x' <- enumFromThenTo x (x + r) (x + floor w + r) 
+        y' <- enumFromThenTo y (y + r) (y + floor h + r)
+        z' <- enumFromThenTo x (x + r) (x + floor w + r)
+        pure $ ThreeTuple x' y' z'
+    translate2 p (-(w / 2.0)) (-(h / 2.0)) Nothing
+    traverse_ (\(ThreeTuple x y z) -> do
+      push p
+      translate2 p (toNumber x) (toNumber y) (Just (toNumber (-z)))
+      scale2 p (NumberOrArrayNumberOrVectorNumber 0.3) Nothing Nothing
+      box p 
+        (Just (toNumber r)) 
+        (Just (toNumber r)) 
+        (Just (toNumber r)) 
+        Nothing Nothing
+      pop p
+      ) grid
+    pure unit
 
   case mAppState of
     (Just _) -> do
